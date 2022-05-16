@@ -1,2 +1,2 @@
 # canvas
-Wpf controls to renders shapes
+Wpf controls to render shapes
