@@ -9,23 +9,23 @@ public class MainViewModel
 {
     public event Action<List<MyShape>>? ChangeDataEvent;
 
-    private readonly List<string> _shapesKey;
-    private readonly Dictionary<string, ICanvas> _shapesProviders;
-    private string? _selectedCanvas;
+    private readonly List<string> shapesKey;
+    private readonly Dictionary<string, ICanvas> shapesProviders;
+    private string? selectedCanvas;
 
     public string? SelectedCanvas
     {
-        get => _selectedCanvas;
+        get => selectedCanvas;
 
         set
         {
-            _selectedCanvas = value;
+            selectedCanvas = value;
             ChangeData();
             OnPropertyChanged(nameof(SelectedCanvas));
         }
     }
 
-    public List<string> CanvasSource => _shapesKey;
+    public List<string> CanvasSource => shapesKey;
 
     public ICommand ChangeDataCommand { get; set; }
 
@@ -33,15 +33,21 @@ public class MainViewModel
         Dictionary<string, ICanvas> shapesProviders
         , IConfigProvider configProvider) : base(configProvider)
     {
-        _shapesProviders = shapesProviders;
-        _shapesKey = _shapesProviders.Keys.ToList();
+        this.shapesProviders = shapesProviders;
+        shapesKey = this.shapesProviders.Keys.ToList();
         ChangeDataCommand = new ActionCommand(ChangeData);
-        SelectedCanvas = _shapesKey[0];
+        SelectedCanvas = shapesKey[0];
     }
 
-    public void Initialize() =>
-        ChangeDataEvent(_shapesProviders[SelectedCanvas].Shapes);
+    public void Initialize()
+    {
+        ArgumentNullException.ThrowIfNull(SelectedCanvas);
+        ChangeDataEvent?.Invoke(shapesProviders[SelectedCanvas].Shapes);
+    }
 
-    private void ChangeData() =>
-        ChangeDataEvent?.Invoke(_shapesProviders[SelectedCanvas].Shapes);
+    private void ChangeData()
+    {
+        ArgumentNullException.ThrowIfNull(SelectedCanvas);
+        ChangeDataEvent?.Invoke(shapesProviders[SelectedCanvas].Shapes);
+    }
 }

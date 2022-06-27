@@ -5,21 +5,21 @@ namespace Canvas.App;
 public class ActionCommand
     : ICommand
 {
-    public event EventHandler CanExecuteChanged;
+    public event EventHandler? CanExecuteChanged;
 
-    private readonly Action _action;
+    private readonly Action action;
 
     public ActionCommand(Action action)
     {
-        _action = action;
+        this.action = action;
     }
 
-    public bool CanExecute(object parameter)
+    public bool CanExecute(object? parameter)
         => true;
 
-    public void Execute(object parameter)
+    public void Execute(object? parameter)
     {
-        _action();
-        CanExecuteChanged(this, new EventArgs());
+        action();
+        CanExecuteChanged?.Invoke(this, new EventArgs());
     }
 }
